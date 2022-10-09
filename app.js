@@ -1,18 +1,21 @@
-const express = require("express");
-require("dotenv").config();
+require('dotenv').config();
+const http = require('http');
+const express = require('express');
+const cors = require('cors');
+const apiRouter = require('./routes');
+
+// Initialize the app and port
 const app = express();
+const port = process.env.PORT || 8000;
 
-// route
-app.get("/", (req, res) => {
-  // Sending This is the home page! in the page
-  res
-    .status(200)
-    .send(`This is the home page and running on ${process.env.PORT}`);
-});
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// Listening to the port 
-let PORT = process.env.PORT ? process.env.PORT : 8000;
-console.log(PORT);
-app.listen(PORT, () => {
-  console.log(`Server is running...`);
-});
+app.use('/', apiRouter);
+
+// Create server
+const server = http.createServer(app);
+
+// Listening to the server
+server.listen(port, () => console.log(`Server listening on port: ${port}`));
